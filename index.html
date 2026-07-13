@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>OrganVR</title>
+
+        <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+    </head>
+
+    <body>
+
+    <a-scene>
+        <!-- Assets -->
+        <a-assets>
+            <a-asset-item
+                id="lungsModel"
+                src="assets/lungs.glb">
+            </a-asset-item>
+            <a-asset-item
+    id="kidneyModel"
+    src="assets/kidney.glb">
+</a-asset-item>
+            
+        </a-assets>
+
+        <!-- Camera + Cursor -->
+        <a-camera position="0 1.6 4">
+            <a-cursor color="red"></a-cursor>
+        </a-camera>
+
+        <!-- Lights -->
+        <a-light
+            type="ambient"
+            intensity="1">
+        </a-light>
+
+        <a-light
+            type="directional"
+            position="1 2 1"
+            intensity="2">
+        </a-light>
+
+        <!-- Back Button -->
+        <a-plane
+            id="backBtn"
+            visible="false"
+            position="-2.2 3 -3"
+            width="0.8"
+            height="0.3"
+            color="#64748b">
+        </a-plane>
+
+        <a-text
+            id="backBtnText"
+            visible="false"
+            value="Back"
+            position="-2.2 3 -2.99"
+            align="center"
+            color="white"
+            width="2">
+        </a-text>
+
+
+        <!-- Title -->
+        <a-text
+            value="OrganVR"
+            position="0 4 -3"
+            align="center"
+            color="#222"
+            scale="1.2 1.2 1.2">
+        </a-text>
+
+        <!-- Menu Subtitle -->
+        <a-text
+            id="menuTitle"
+            value="Select an Organ to Explore"
+            position="0 3.5 -3"
+            align="center"
+            color="#475569"
+            scale="0.8 0.8 0.8">
+        </a-text>
+
+        <!-- Lungs Button -->
+        <a-plane
+            id="lungsBtn"
+            position="-0.8 2.8 -3"
+            width="0.8"
+            height="0.3"
+            color="#3b82f6">
+        </a-plane>
+
+        <a-text
+            id="lungsBtnText"
+            value="Lungs"
+            position="-0.8 2.8 -2.99"
+            align="center"
+            color="white"
+            width="2">
+        </a-text>
+
+        <!-- Kidney Button -->
+        <a-plane
+            id="kidneyBtn"
+            position="0.8 2.8 -3"
+            width="0.8"
+            height="0.3"
+            color="#64748b">
+        </a-plane>
+
+        <a-text
+            id="kidneyBtnText"
+            value="Kidney"
+            position="0.8 2.8 -2.99"
+            align="center"
+            color="white"
+            width="2">
+        </a-text>
+
+        <!-- Organ Name -->
+        <a-text
+            id="organTitle"
+            visible="false"
+            value="Human Lungs"
+            position="0 2.5 -3"
+            align="center"
+            color="#0077ff"
+            scale="1 1 1">
+        </a-text>
+
+        <a-cylinder
+            id="stand"
+            visible="false"
+            position="0 0.5 -3"
+            radius="0.8"
+            height="0.2"
+            color="#94a3b8">
+        </a-cylinder>
+        
+        <!-- Lung Model -->
+        <a-entity
+            id="lungs"
+            visible="false"
+            gltf-model="#lungsModel"
+            position="0 1 -3"
+            scale="2 2 2">
+
+            <!-- Trachea Hotspot -->
+            <a-sphere
+                id="trachea"
+                class="clickable"
+                position="0 0.25 -0.01"
+                radius="0.01"
+                opacity="0"
+                color="#ff4444">
+            </a-sphere>
+
+            <a-sphere
+                id="leftLung"
+                position="-0.05 0.05 0"
+                radius="0.08"
+                opacity="0">
+            </a-sphere>
+
+            <a-sphere
+                id="rightLung"
+                position="0.05 0.05 0"
+                radius="0.08"
+                opacity="0">
+            </a-sphere>
+
+        </a-entity>
+
+        <a-entity
+            id="kidney"
+            visible="false"
+            gltf-model="#kidneyModel"
+            position="0 1 -3"
+            scale="0.5 0.5 0.5">
+
+            <!-- Kidney Body Hotspot -->
+            <!-- Left Kidney Body -->
+            <a-sphere
+                id="leftKidneyBody"
+                position="-0.5 0.5 0"
+                radius="0.3"
+                opacity="0"
+                color="red">
+            </a-sphere>
+
+            <!-- Right Kidney Body -->
+            <a-sphere
+                id="rightKidneyBody"
+                position="0.5 0.5 0"
+                radius="0.3"
+                opacity="0"
+                color="blue">
+            </a-sphere>
+
+            <!-- Renal Artery -->
+            <a-cylinder
+                id="renalArtery"
+                position="0.06 0.3 -0.07"
+                radius="0.05"
+                height="1.5"
+                color="red"
+                opacity="0">
+            </a-cylinder>
+
+            <!-- Renal Vein -->
+            <a-cylinder
+                id="renalVein"
+                position="-0.05 0.3 0.1"
+                radius="0.05"
+                height="1.5"
+                color="blue"
+                opacity="0">
+            </a-cylinder>
+
+        </a-entity>
+
+        <!-- Information Panel -->
+        <a-plane
+            id="infoPanel"
+            visible="false"
+            position="2.5 1.3 -3"
+            width="2.5"
+            height="1"
+            color="white">
+        </a-plane>
+
+        <a-text
+            id="infoText"
+            visible="false"
+            value="LUNGS
+            
+
+        The lungs are a pair of respiratory organs responsible for exchanging oxygen and carbon dioxide in the body."
+            position="2.5 1.3 -2.99"
+            align="center"
+            color="black"
+            width="2.2">
+        </a-text>
+
+        <!-- Ground -->
+        <a-sky color="#B8C7D1"></a-sky>
+        <a-plane
+            rotation="-90 0 0"
+            width="20"
+            height="20"
+            color="#dbeafe">
+        </a-plane>
+
+        <a-plane
+            id="resetArea"
+            position="0 1.5 -6"
+            width="20"
+            height="10"
+            opacity="0">
+        </a-plane>
+
+    </a-scene>
+
+    <script>
+
+        window.addEventListener('DOMContentLoaded', () => {
+
+            let currentOrgan = '';
+            const lungsBtn = document.querySelector('#lungsBtn');
+            const kidneyBtn = document.querySelector('#kidneyBtn');
+            const organTitle = document.querySelector('#organTitle');
+            const trachea = document.querySelector('#trachea');
+            const infoText = document.querySelector('#infoText');
+            const resetArea = document.querySelector('#resetArea');
+            const leftLung = document.querySelector('#leftLung');
+            const rightLung = document.querySelector('#rightLung');
+            const stand = document.querySelector('#stand');
+            const lungsBtnText = document.querySelector('#lungsBtnText');
+            const kidneyBtnText = document.querySelector('#kidneyBtnText');
+            const backBtn = document.querySelector('#backBtn');
+            const backBtnText = document.querySelector('#backBtnText');
+            const menuTitle = document.querySelector('#menuTitle');
+            const infoPanel = document.querySelector('#infoPanel');
+            const leftKidneyBody = document.querySelector('#leftKidneyBody');
+            const rightKidneyBody = document.querySelector('#rightKidneyBody');
+            const renalArtery = document.querySelector('#renalArtery');
+            const renalVein = document.querySelector('#renalVein');
+
+            trachea.addEventListener('mouseenter', () => {
+
+                trachea.setAttribute('opacity', '0.8');
+                trachea.setAttribute('radius', '0.02');
+
+            });
+
+            trachea.addEventListener('mouseleave', () => {
+
+                trachea.setAttribute('opacity', '0');
+                trachea.setAttribute('radius', '0.01');
+
+            });
+
+            trachea.addEventListener('click', () => {
+
+                if (!document.querySelector('#lungs').getAttribute('visible'))
+                    return;
+
+
+                infoText.setAttribute(
+                    'value',
+                    'TRACHEA\n\nThe main airway that carries air from the throat to the lungs.'
+                );
+
+            });
+
+            resetArea.addEventListener('click', () => {
+
+                if (currentOrgan === 'lungs') {
+
+        infoText.setAttribute(
+            'value',
+            'LUNGS\n\nThe lungs are a pair of respiratory organs responsible for exchanging oxygen and carbon dioxide in the body.'
+        );
+
+    }
+
+    else if (currentOrgan === 'kidney') {
+
+        infoText.setAttribute(
+            'value',
+            'KIDNEYS\n\nThe kidneys filter blood, remove waste products, regulate body fluids and help maintain healthy blood pressure.'
+        );
+
+    }
+
+            });
+
+            leftLung.addEventListener('click', () => {
+
+                if (!document.querySelector('#lungs').getAttribute('visible'))
+                    return;
+
+                infoText.setAttribute(
+                    'value',
+                    'LEFT LUNG\n\nThe left lung contains two lobes and is slightly smaller to make space for the heart.'
+                );
+
+            });
+
+            rightLung.addEventListener('click', () => {
+
+                if (!document.querySelector('#lungs').getAttribute('visible'))
+                    return;
+
+
+                infoText.setAttribute(
+                    'value',
+                    'RIGHT LUNG\n\nThe right lung contains three lobes and is larger than the left lung.'
+                );
+
+            });
+
+            function showKidneyBodyInfo() {
+
+                if (!document.querySelector('#kidney').getAttribute('visible'))
+                    return;
+
+                infoText.setAttribute(
+                    'value',
+                    'KIDNEY BODY\n\nThe kidney body contains the cortex and medulla, where blood is filtered and urine begins to form.'
+                );
+
+            }
+            leftKidneyBody.addEventListener('click', showKidneyBodyInfo);
+            rightKidneyBody.addEventListener('click', showKidneyBodyInfo);
+            
+            function showRenalArteryInfo() {
+
+                if (!document.querySelector('#kidney').getAttribute('visible'))
+                    return;
+
+                infoText.setAttribute(
+                    'value',
+                    'RENAL ARTERY\n\nThe renal artery carries oxygen-rich blood from the aorta to the kidneys for filtration.'
+                );
+
+            }
+
+            function showRenalVeinInfo() {
+
+                if (!document.querySelector('#kidney').getAttribute('visible'))
+                    return;
+
+                infoText.setAttribute(
+                    'value',
+                    'RENAL VEIN\n\nThe renal vein carries filtered blood from the kidneys back to the inferior vena cava.'
+                );
+
+            }
+            renalArtery.addEventListener('click', showRenalArteryInfo);
+            renalVein.addEventListener('click', showRenalVeinInfo);
+
+            lungsBtn.addEventListener('click', () => {
+
+                currentOrgan = 'lungs';
+
+                stand.setAttribute('visible', true);
+
+                backBtn.setAttribute('visible', true);
+                backBtnText.setAttribute('visible', true);
+
+                lungsBtn.setAttribute('visible', false);
+                kidneyBtn.setAttribute('visible', false);
+
+                lungsBtnText.setAttribute('visible', false);
+                kidneyBtnText.setAttribute('visible', false);
+
+                menuTitle.setAttribute('visible', false);
+
+                document.querySelector('#lungs')
+                    .setAttribute('visible', true);
+
+                document.querySelector('#organTitle')
+                        .setAttribute('visible', true);
+
+                document.querySelector('#infoPanel')
+                        .setAttribute('visible', true);
+
+                document.querySelector('#infoText')
+                        .setAttribute('visible', true);
+
+                organTitle.setAttribute(
+                    'value',
+                    'Human Lungs'
+                );
+
+                infoText.setAttribute(
+                    'value',
+                    'LUNGS\n\nThe lungs are a pair of respiratory organs responsible for exchanging oxygen and carbon dioxide in the body.'
+                );
+
+            });
+
+            kidneyBtn.addEventListener('click', () => {
+
+                currentOrgan = 'kidney';
+
+                stand.setAttribute('visible', true);
+
+                backBtn.setAttribute('visible', true);
+                backBtnText.setAttribute('visible', true);
+
+                lungsBtn.setAttribute('visible', false);
+                kidneyBtn.setAttribute('visible', false);
+
+                lungsBtnText.setAttribute('visible', false);
+                kidneyBtnText.setAttribute('visible', false);
+
+                menuTitle.setAttribute('visible', false);
+
+                document.querySelector('#kidney')
+                    .setAttribute('visible', true);
+
+                organTitle.setAttribute(
+                    'visible',
+                    true
+                );
+
+                organTitle.setAttribute(
+                    'value',
+                    'Human Kidneys'
+                );
+
+                infoPanel.setAttribute('visible', true);
+
+                infoText.setAttribute('visible', true);
+
+                infoText.setAttribute(
+                    'value',
+                    'KIDNEYS\n\nThe kidneys filter blood, remove waste products, regulate body fluids and help maintain healthy blood pressure.'
+                );
+                renalArtery.setAttribute('visible', true);
+                renalVein.setAttribute('visible', true);
+
+            });
+
+            backBtn.addEventListener('click', () => {
+
+                // Hide explorer items
+                document.querySelector('#lungs').setAttribute('visible', false);
+
+                document.querySelector('#kidney').setAttribute('visible', false);
+
+                document.querySelector('#organTitle').setAttribute('visible', false);
+
+                document.querySelector('#infoPanel').setAttribute('visible', false);
+
+                document.querySelector('#infoText').setAttribute('visible', false);
+
+                stand.setAttribute('visible', false);
+
+                // Hide back button
+                backBtn.setAttribute('visible', false);
+                backBtnText.setAttribute('visible', false);
+
+                // Show menu buttons
+                lungsBtn.setAttribute('visible', true);
+                kidneyBtn.setAttribute('visible', true);
+
+                lungsBtnText.setAttribute('visible', true);
+                kidneyBtnText.setAttribute('visible', true);
+
+                menuTitle.setAttribute('visible', true);
+
+                renalArtery.setAttribute('visible', false);
+                renalVein.setAttribute('visible', false);
+
+            });
+
+        });
+
+        </script>
+
+    </body>
+</html>
